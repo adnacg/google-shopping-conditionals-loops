@@ -1,177 +1,64 @@
-// 1.) Go through the items and find all results that have kind of shopping#product. Print the count of these results. Where else is this count information stored in the search results?
-// Option 1:
-// var itemList = products["items"];
-// var itemCount = 0;
-// itemList.forEach(function(items){
-//   if (items.kind == "shopping#product") {
-//     itemCount+=1;
-//   }
-// });
-// console.log(itemCount);
+const itemsArray = products.items;
 
-// Option 2:
-// var itemList = products["items"];
-// var itemCount = 0;
-// for (i = 0; i < itemList.length; i++) {
-//   if (itemList[i].kind == "shopping#product") {
-//     itemCount += 1;
-//   };
-// };
-// console.log(itemCount);
+// Utility functions
+// 1. clear(): clears the output on the page
+// 2. print(text): outputs text to the page
+function clear () {
+    document.getElementById('output').innerHTML = "";
+}
+function print (text) {
+    document.getElementById('output').innerHTML += text + "<br>";
+};
 
-// Option 3:
-// function getCount() {
-//   var itemList = products["items"];
-//   var itemCount = 0;
-//   for (i = 0; i < itemList.length; i++) {
-//     if (itemList[i].kind == "shopping#product") {
-//       itemCount += 1;
-//     };
-//   };
-//   return itemCount;
-// };
-// console.log(getCount());
+// Solutions
+function countByKind (kind) {
+    clear();
+    let count = 0;
+    itemsArray.forEach(item => (item.kind == kind) ? count++ : count);
+    print(count);
+}
 
-// 2.) Print the title of all items with a backorder availability in inventories.
-// var itemList = products["items"];
-// var backOrderAvailable = "";
-// itemList.forEach(function(items) {
-//   if (items.product.inventories[0].availability == "backorder") {
-//     backOrderAvailable += items["product"].title;
-//   };
-// });
-// console.log(backOrderAvailable);
+function searchByAvailability (availability) {
+    clear();
+    itemsArray.forEach(item => {if (item.product.inventories[0].availability == availability) {
+        print(item.product.title);
+    }});
+}
 
-// Option 2:
-// var itemList = products["items"];
-// var backOrderAvailable = "";
-// for (i = 0; i < itemList.length; i++) {
-//   if (itemList[i].product.inventories[0].availability == "backorder") {
-//     backOrderAvailable += itemList[i]["product"].title;
-//   };
-// };
-// console.log(backOrderAvailable);
+function searchByImageNumber (lowerThreshold) {
+    clear();
+    itemsArray.forEach(item => {if (item.product.images.length > lowerThreshold) {
+        print(item.product.title);
+    }});
+}
 
-// Option 3:
-// function getBackOrder() {
-//   var itemList = products["items"];
-//   var backOrderAvailable = "";
-//   for (i = 0; i < itemList.length; i++) {
-//     if (itemList[i].product.inventories[0].availability == "backorder") {
-//       backOrderAvailable += itemList[i]["product"].title;
-//     };
-//   };
-//   return backOrderAvailable;
-// };
-// console.log(getBackOrder());
+function searchByBrand (brand) {
+    clear();
+    let searchFilter = brand.toLowerCase();
+    itemsArray.forEach(item => {if (item.product.brand.toLowerCase().indexOf(searchFilter) >= 0) {
+        print(item.product.title);
+    }});
+}
 
-// 3.) Print the title of all items with more than one image link.
-// var itemList = products["items"];
-// var moreThanOneImageLink = "";
-// itemList.forEach(function(items) {
-//   if (items.product.images.length > 1) {
-//     moreThanOneImageLink += items["product"].title;
-//   };
-// });
-// console.log(moreThanOneImageLink);
+function searchByAuthorNameAndBrand (author, brand) {
+    clear();
+    let searchFilter_Author = author.toLowerCase();
+    let searchFilter_Brand = brand.toLowerCase();
+    itemsArray.forEach(item => {if (item.product.brand.toLowerCase().indexOf(searchFilter_Brand) >= 0 && item.product.author.name.toLowerCase().indexOf(searchFilter_Author) >= 0) {
+        print(item.product.title);
+    }});
+}
 
-// Option 2:
-// var itemList = products["items"];
-// var moreThanOneImageLink = "";
-// for (i = 0; i < itemList.length; i++) {
-//   if (itemList[i].product.images.length > 1) {
-//     moreThanOneImageLink += itemList[i]["product"].title;
-//   };
-// };
-// console.log(moreThanOneImageLink);
+function printProductBrandPriceImglink () {
+    clear();
+    itemsArray.forEach(item => {
+        print("Brand: " + item.product.brand + "<br>Price: " + item.product.inventories[0].price + "<br>Image link: <a href='" + item.product.images[0].link + "'>" + item.product.images[0].link + "</a><br><br>");
+    })
+}
 
-// Option 3:
-// function getTitleOne() {
-//   var itemList = products["items"];
-//   var moreThanOneImageLink = "";
-//   for (i = 0; i < itemList.length; i++) {
-//     if (itemList[i].product.images.length > 1) {
-//       moreThanOneImageLink += itemList[i]["product"].title;
-//     };
-//   };
-//   return moreThanOneImageLink;
-// };
-// console.log(getTitleOne());
-
-// 4.) Print all "Canon" products in the items (careful with case sensitivity).
-// var itemList = products["items"];
-// var productOfCanon = "";
-// itemList.forEach(function(items) {
-//   if ((items.product.brand).toLowerCase() == "canon") {
-//     productOfCanon += items["product"].title;
-//   };
-// });
-// console.log(productOfCanon);
-
-// Option 2:
-// var itemList = products["items"];
-// var productOfCanon = "";
-// for (i = 0; i < itemList.length; i++) {
-//   if ((itemList[i].product.brand).toLowerCase() == "canon") {
-//     productOfCanon += itemList[i]["product"].title;
-//   };
-// };
-// console.log(productOfCanon);
-
-// Option 3:
-// function getTitleTwo() {
-//   var itemList = products["items"];
-//   var productOfCanon = "";
-//   for (i = 0; i < itemList.length; i++) {
-//     if ((itemList[i].product.brand).toLowerCase() == "canon") {
-//       productOfCanon += itemList[i]["product"].title;
-//     };
-//   };
-//   return productOfCanon;
-// };
-// console.log(getTitleTwo());
-
-// 5.) Print all items that have an author name of "eBay" and are brand "Canon".
-// var itemList = products["items"];
-// var eBayCanon = "";
-// for (i = 0; i < itemList.length; i++) {
-//   if (((itemList[i].product.brand).toLowerCase() == "canon") && ((itemList[i].product.author.name) == "eBay")) {
-//     eBayCanon += itemList[i]["product"].title;
-//   };
-// };
-// console.log(eBayCanon);
-
-// Option 2:
-// var itemList = products["items"];
-// var eBayCanon = "";
-// for (i = 0; i < itemList.length; i++) {
-//   if (((itemList[i].product.brand).toLowerCase() == "canon") && ((itemList[i].product.author.name) == "eBay")) {
-//     eBayCanon += itemList[i]["product"].title;
-//   };
-// };
-// console.log(eBayCanon);
-
-// Option 3:
-// function getTitleThree() {
-//   var itemList = products["items"];
-//   var eBayCanon = "";
-//   for (i = 0; i < itemList.length; i++) {
-//     if (((itemList[i].product.brand).toLowerCase() == "canon") && ((itemList[i].product.author.name) == "eBay")) {
-//       eBayCanon += itemList[i]["product"].title;
-//     };
-//   };
-//   return eBayCanon;
-// };
-// console.log(getTitleThree());
-
-// 6.) Print all the products with their brand, price, and an image link
-// var itemList = products["items"];
-// function getInfo() {
-//   for (i = 0; i < products.items.length; i++) {
-//     var brand = products.items[i]["product"].brand;
-//     var price = products.items[i]["product"].inventories[0].price;
-//     var imageLink = products.items[i]["product"].images[0].link;
-//     console.log("Item number " + (i + 1) + " is of brand " + brand + " and priced at $" + price + ". Check out the following link for its image: " + imageLink)
-//   };
-// };
-// getInfo();
+// countByKind("shopping#product");
+// searchByAvailability("inStock");
+// searchByImageNumber(1);
+// searchByBrand("Canon");
+// searchByAuthorNameAndBrand('eBay', 'Canon');
+// printProductBrandPriceImglink();
